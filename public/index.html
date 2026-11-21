@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlertaSJL · Zonas de riesgo en San Juan de Lurigancho</title>
+  <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header>
+    <h1>AlertaSJL</h1>
+    <p>Mapa de zonas de riesgo y reportes ciudadanos · San Juan de Lurigancho</p>
+    <nav>
+      <button class="tab activo" data-tab="mapa">Mapa</button>
+      <button class="tab" data-tab="reportar">Reportar</button>
+      <button class="tab" data-tab="estadisticas">Estadísticas</button>
+      <button class="tab" data-tab="panel">Panel serenazgo</button>
+    </nav>
+  </header>
+
+  <div id="alerta-cercania" class="alerta oculto" role="alert"></div>
+
+  <main>
+    <section id="mapa" class="seccion activa">
+      <div class="filtros">
+        <label>Tipo de delito
+          <select id="filtro-tipo"><option value="">Todos</option></select>
+        </label>
+        <label>Franja horaria
+          <select id="filtro-franja">
+            <option value="">Todas</option>
+            <option value="manana">Mañana (06-12)</option>
+            <option value="tarde">Tarde (12-18)</option>
+            <option value="noche">Noche (18-24)</option>
+            <option value="madrugada">Madrugada (00-06)</option>
+          </select>
+        </label>
+        <button id="btn-ubicacion" type="button">¿Estoy en zona de riesgo?</button>
+      </div>
+      <div id="map"></div>
+      <p class="leyenda"><span class="dot alto"></span>Alto <span class="dot medio"></span>Medio <span class="dot bajo"></span>Bajo · <small>Datos simulados con fines académicos.</small></p>
+      <h2>Reportes recientes</h2>
+      <ul id="lista-reportes" class="lista"></ul>
+    </section>
+
+    <section id="reportar" class="seccion">
+      <h2>Reportar un incidente</h2>
+      <p>Haz clic en el mapa de la pestaña <b>Mapa</b> para marcar la ubicación, o usa tu ubicación actual.</p>
+      <form id="form-reporte">
+        <label>Tipo de incidente <select id="r-tipo" required></select></label>
+        <label>Latitud <input id="r-lat" type="number" step="any" required></label>
+        <label>Longitud <input id="r-lng" type="number" step="any" required></label>
+        <label>Descripción <textarea id="r-desc" minlength="10" maxlength="280" required></textarea></label>
+        <label class="check"><input id="r-anonimo" type="checkbox" checked> Reportar de forma anónima</label>
+        <label id="lbl-contacto" class="oculto">Celular de contacto <input id="r-contacto" pattern="9[0-9]{8}" placeholder="9XXXXXXXX"></label>
+        <button type="submit">Enviar reporte</button>
+      </form>
+      <p id="msg-reporte" class="msg"></p>
+    </section>
+
+    <section id="estadisticas" class="seccion">
+      <h2>Estadísticas de reportes</h2>
+      <div id="stats" class="stats"></div>
+    </section>
+
+    <section id="panel" class="seccion">
+      <h2>Panel del operador de serenazgo</h2>
+      <form id="form-login">
+        <label>Usuario <input id="l-user" autocomplete="username" required></label>
+        <label>Contraseña <input id="l-pass" type="password" autocomplete="current-password" required></label>
+        <button type="submit">Ingresar</button>
+      </form>
+      <p id="msg-login" class="msg"></p>
+      <div id="bandeja" class="oculto">
+        <label>Filtrar por estado
+          <select id="f-estado"><option value="">Todos</option></select>
+        </label>
+        <button id="btn-salir" type="button">Cerrar sesión</button>
+        <table>
+          <thead><tr><th>#</th><th>Fecha</th><th>Tipo</th><th>Descripción</th><th>Contacto</th><th>Estado</th><th>Comisaría</th></tr></thead>
+          <tbody id="tabla-reportes"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>Proyecto académico · Proyecto Final de Carrera III · USIL</footer>
+  <script src="/vendor/leaflet/leaflet.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+# Infraestructura como código para Render (Blueprint)
+services:
+  - type: web
+    name: alerta-sjl
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: false # el despliegue lo dispara el pipeline de GitHub Actions
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true # Render genera un secreto aleatorio
+      - key: OPERADOR_PASSWORD
+        sync: false # se ingresa manualmente en el panel de Render
+      - key: ADMIN_PASSWORD
+        sync: false

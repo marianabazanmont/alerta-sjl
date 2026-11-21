@@ -1,0 +1,7 @@
+# Configuración de Gitleaks: usa las reglas por defecto
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Archivos de ejemplo sin secretos reales"
+paths = ['''\.env\.example''']

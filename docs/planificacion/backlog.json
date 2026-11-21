@@ -1,0 +1,86 @@
+{
+  "proyecto": "AlertaSJL",
+  "clave_jira": "AS",
+  "duracion_sprint_dias_habiles": 10,
+  "wip": { "In Progress": 3, "In Review": 2 },
+  "sprints": [
+    { "id": 1, "nombre": "Sprint 1", "inicio": "2026-09-07", "fin": "2026-09-18", "goal": "MVP navegable: el vecino ve el mapa de zonas de riesgo y registra un reporte; el operador puede autenticarse." },
+    { "id": 2, "nombre": "Sprint 2", "inicio": "2026-09-21", "fin": "2026-10-02", "goal": "Reportes ciudadanos completos (anónimos, con ubicación en mapa) y bandeja de atención para serenazgo." },
+    { "id": 3, "nombre": "Sprint 3", "inicio": "2026-10-05", "fin": "2026-10-16", "goal": "Gestión del ciclo de vida del incidente, roles y analítica para planificar el patrullaje." },
+    { "id": 4, "nombre": "Sprint 4", "inicio": "2026-10-19", "fin": "2026-10-30", "goal": "Coordinación con comisarías, alertas de cercanía y endurecimiento de seguridad para el Release 1.0." }
+  ],
+  "hitos": [
+    { "nombre": "Kick-off", "fecha": "2026-09-07" },
+    { "nombre": "MVP", "fecha": "2026-09-18" },
+    { "nombre": "Release Beta", "fecha": "2026-10-02" },
+    { "nombre": "Release 1.0", "fecha": "2026-10-30" }
+  ],
+  "epicas": [
+    {
+      "id": "E1",
+      "nombre": "Mapa de zonas de riesgo",
+      "descripcion": "Visualización georreferenciada de las zonas, calles y horarios de mayor incidencia delictiva en San Juan de Lurigancho, con filtros por tipo de delito y franja horaria.",
+      "objetivo": "Que vecinos y visitantes conozcan las zonas de riesgo y eviten exponerse, reduciendo la probabilidad de ser víctimas de robos y asaltos."
+    },
+    {
+      "id": "E2",
+      "nombre": "Reportes ciudadanos",
+      "descripcion": "Canal único para que los vecinos reporten incidentes (robo, asalto en transporte, extorsión, microcomercialización), incluso de forma anónima, con ubicación exacta.",
+      "objetivo": "Centralizar los reportes que hoy quedan dispersos en redes sociales para que lleguen al serenazgo y a la comisaría."
+    },
+    {
+      "id": "E3",
+      "nombre": "Gestión y atención de incidentes",
+      "descripcion": "Bandeja para operadores de serenazgo que permite priorizar, atender, cambiar el estado y derivar reportes a la comisaría correspondiente.",
+      "objetivo": "Reducir el tiempo de respuesta ante incidentes y dar trazabilidad a cada reporte."
+    },
+    {
+      "id": "E4",
+      "nombre": "Autenticación y seguridad",
+      "descripcion": "Inicio de sesión, roles y controles de seguridad (JWT, bcrypt, limitación de intentos) que protegen el panel y los datos de los denunciantes.",
+      "objetivo": "Garantizar que solo personal autorizado gestione incidentes y proteger la identidad de los vecinos frente a represalias."
+    },
+    {
+      "id": "E5",
+      "nombre": "Analítica y alertas",
+      "descripcion": "Estadísticas por tipo de delito, estado y franja horaria, y alertas al ciudadano cuando se encuentra en una zona de alto riesgo.",
+      "objetivo": "Apoyar la planificación del patrullaje con datos y prevenir delitos alertando a tiempo."
+    }
+  ],
+  "historias": [
+    { "id": "HU01", "epica": "E4", "rol": "operador de serenazgo", "accion": "iniciar sesión con usuario y contraseña", "beneficio": "acceder de forma segura al panel de gestión de incidentes", "puntos": 5, "moscow": "Must", "sprint_inicio": 1, "sprint_fin": 2,
+      "criterios": ["Dado que tengo credenciales válidas, cuando inicio sesión, entonces accedo al panel y recibo un token con vigencia de 2 horas.", "Dado que ingreso una contraseña incorrecta, cuando intento ingresar, entonces veo «Credenciales inválidas» sin indicar qué dato falló."] },
+    { "id": "HU02", "epica": "E4", "rol": "administrador", "accion": "asignar roles (operador, administrador) a los usuarios", "beneficio": "controlar quién puede gestionar los reportes", "puntos": 5, "moscow": "Should", "sprint_inicio": 3, "sprint_fin": 3, "depende": ["HU01"],
+      "criterios": ["Dado que soy administrador, cuando asigno el rol operador a un usuario, entonces ese usuario puede ver la bandeja de reportes.", "Dado que un usuario sin rol de staff llama a la bandeja, cuando envía la petición, entonces recibe 403 Permisos insuficientes."] },
+    { "id": "HU03", "epica": "E1", "rol": "vecino de SJL", "accion": "ver un mapa del distrito con las zonas de riesgo coloreadas por nivel", "beneficio": "evitar transitar por las zonas más peligrosas", "puntos": 8, "moscow": "Must", "sprint_inicio": 1, "sprint_fin": 1,
+      "criterios": ["Dado que abro la aplicación, cuando carga el mapa, entonces veo las zonas en rojo (alto), naranja (medio) y amarillo (bajo).", "Dado que veo el mapa, cuando reviso la leyenda, entonces entiendo qué significa cada color."] },
+    { "id": "HU04", "epica": "E1", "rol": "vecino de SJL", "accion": "filtrar las zonas por tipo de delito", "beneficio": "conocer el riesgo específico que me preocupa (robo, extorsión, etc.)", "puntos": 3, "moscow": "Should", "sprint_inicio": 2, "sprint_fin": 3, "depende": ["HU03"],
+      "criterios": ["Dado que estoy en el mapa, cuando selecciono «Extorsión», entonces solo se muestran las zonas con ese delito.", "Dado que envío un tipo inexistente a la API, cuando se procesa, entonces recibo 400 Tipo inválido."] },
+    { "id": "HU05", "epica": "E1", "rol": "visitante del distrito", "accion": "filtrar las zonas por franja horaria", "beneficio": "planificar a qué hora es más seguro transitar", "puntos": 3, "moscow": "Should", "sprint_inicio": 3, "sprint_fin": 3, "depende": ["HU03"],
+      "criterios": ["Dado que estoy en el mapa, cuando elijo «Noche (18-24)», entonces veo solo las zonas críticas en ese horario.", "Dado que quito el filtro, cuando selecciono «Todas», entonces vuelven a mostrarse todas las zonas."] },
+    { "id": "HU06", "epica": "E1", "rol": "vecino de SJL", "accion": "ver el detalle de una zona (nivel, delitos frecuentes y horario crítico)", "beneficio": "informarme antes de pasar por ella", "puntos": 2, "moscow": "Could", "sprint_inicio": 3, "sprint_fin": 3, "depende": ["HU03"],
+      "criterios": ["Dado que veo una zona en el mapa, cuando hago clic sobre ella, entonces se muestra su nombre, nivel, delitos y horario crítico.", "Dado que consulto una zona inexistente, cuando llamo a la API, entonces recibo 404."] },
+    { "id": "HU07", "epica": "E2", "rol": "vecino de SJL", "accion": "registrar un reporte de incidente con tipo, ubicación y descripción", "beneficio": "alertar al serenazgo y a la comisaría", "puntos": 8, "moscow": "Must", "sprint_inicio": 1, "sprint_fin": 1,
+      "criterios": ["Dado que completo tipo, ubicación dentro de SJL y una descripción de 10 a 280 caracteres, cuando envío, entonces el reporte se registra con estado «Nuevo».", "Dado que la ubicación está fuera de SJL, cuando envío, entonces veo un mensaje de error y no se registra."] },
+    { "id": "HU08", "epica": "E2", "rol": "vecino víctima de extorsión", "accion": "reportar de forma anónima", "beneficio": "no exponerme a represalias", "puntos": 3, "moscow": "Must", "sprint_inicio": 2, "sprint_fin": 2, "depende": ["HU07"],
+      "criterios": ["Dado que dejo marcada la opción «Anónimo», cuando envío, entonces no se guarda ningún dato de contacto.", "Dado que consulto la lista pública de reportes, cuando se muestra, entonces nunca aparece el celular del denunciante."] },
+    { "id": "HU09", "epica": "E2", "rol": "vecino de SJL", "accion": "marcar la ubicación del incidente con un clic en el mapa", "beneficio": "precisar dónde ocurrió sin escribir coordenadas", "puntos": 5, "moscow": "Should", "sprint_inicio": 2, "sprint_fin": 2, "depende": ["HU03", "HU07"],
+      "criterios": ["Dado que estoy en el mapa, cuando hago clic en un punto, entonces se coloca un marcador y se llenan la latitud y longitud del formulario.", "Dado que uso «mi ubicación», cuando acepto el permiso del navegador, entonces se completan las coordenadas automáticamente."] },
+    { "id": "HU10", "epica": "E2", "rol": "vecino de SJL", "accion": "ver los reportes recientes de mi distrito", "beneficio": "estar al tanto de lo que ocurre cerca", "puntos": 3, "moscow": "Should", "sprint_inicio": 2, "sprint_fin": 2, "depende": ["HU07"],
+      "criterios": ["Dado que abro el mapa, cuando cargan los reportes, entonces veo los últimos 50 ordenados del más reciente al más antiguo.", "Dado que veo un reporte, cuando reviso su información, entonces veo tipo, estado, descripción y fecha."] },
+    { "id": "HU11", "epica": "E3", "rol": "operador de serenazgo", "accion": "ver la bandeja de reportes filtrada por estado y tipo", "beneficio": "priorizar la atención de incidentes", "puntos": 5, "moscow": "Must", "sprint_inicio": 2, "sprint_fin": 2, "depende": ["HU01", "HU07"],
+      "criterios": ["Dado que inicié sesión como operador, cuando abro la bandeja, entonces veo todos los reportes con su contacto (si no es anónimo).", "Dado que no tengo token, cuando intento ver la bandeja, entonces recibo 401."] },
+    { "id": "HU12", "epica": "E3", "rol": "operador de serenazgo", "accion": "cambiar el estado de un reporte (Nuevo, En atención, Atendido, Descartado)", "beneficio": "dar seguimiento y trazabilidad a cada incidente", "puntos": 5, "moscow": "Must", "sprint_inicio": 3, "sprint_fin": 3, "depende": ["HU11"],
+      "criterios": ["Dado un reporte «Nuevo», cuando lo paso a «En atención», entonces se guarda el cambio con mi usuario y la fecha en el historial.", "Dado un reporte «Nuevo», cuando intento pasarlo directo a «Atendido», entonces el sistema lo rechaza (422)."] },
+    { "id": "HU13", "epica": "E3", "rol": "operador de serenazgo", "accion": "derivar un reporte a la comisaría correspondiente", "beneficio": "coordinar la respuesta con la PNP", "puntos": 5, "moscow": "Could", "sprint_inicio": 4, "sprint_fin": 4, "depende": ["HU12"],
+      "criterios": ["Dado un reporte, cuando selecciono la comisaría «Bayóvar», entonces queda derivado y registrado en el historial.", "Dado que envío una comisaría que no existe, cuando se procesa, entonces recibo 400."] },
+    { "id": "HU14", "epica": "E5", "rol": "jefe de serenazgo", "accion": "ver estadísticas de reportes por tipo de delito, estado y franja horaria", "beneficio": "planificar el patrullaje según datos", "puntos": 5, "moscow": "Should", "sprint_inicio": 3, "sprint_fin": 3, "depende": ["HU07"],
+      "criterios": ["Dado que existen reportes, cuando abro Estadísticas, entonces veo el total y los conteos por tipo, estado y franja.", "Dado que se registra un nuevo reporte, cuando actualizo, entonces las cifras se recalculan."] },
+    { "id": "HU15", "epica": "E5", "rol": "vecino de SJL", "accion": "recibir una alerta cuando me encuentro en una zona de alto riesgo", "beneficio": "tomar precauciones a tiempo", "puntos": 8, "moscow": "Could", "sprint_inicio": 4, "sprint_fin": 4, "depende": ["HU03"],
+      "criterios": ["Dado que comparto mi ubicación y estoy dentro del radio de una zona de alto riesgo, cuando consulto, entonces veo una alerta en rojo con el nombre de la zona.", "Dado que estoy fuera de toda zona de alto riesgo, cuando consulto, entonces el sistema me indica que no estoy en zona de alto riesgo."] },
+    { "id": "HU16", "epica": "E5", "rol": "jefe de serenazgo", "accion": "exportar los reportes a CSV", "beneficio": "compartirlos con la comisaría", "puntos": 3, "moscow": "Won't", "sprint_inicio": null, "sprint_fin": null,
+      "criterios": ["Dado que estoy en la bandeja, cuando presiono «Exportar», entonces se descarga un CSV con los reportes filtrados.", "Dado que no tengo rol de staff, cuando intento exportar, entonces recibo 403."] },
+    { "id": "HU17", "epica": "E4", "rol": "responsable de seguridad de la municipalidad", "accion": "que el sistema limite los intentos de login y aplique cabeceras de seguridad", "beneficio": "prevenir ataques de fuerza bruta, XSS y spam de reportes falsos", "puntos": 5, "moscow": "Should", "sprint_inicio": 4, "sprint_fin": 4, "depende": ["HU01"],
+      "criterios": ["Dado que fallo 5 veces el login en un minuto, cuando lo intento de nuevo, entonces recibo «Demasiados intentos, espere un minuto».", "Dado cualquier respuesta del servidor, cuando la inspecciono, entonces incluye Content-Security-Policy y no incluye X-Powered-By."] }
+  ]
+}

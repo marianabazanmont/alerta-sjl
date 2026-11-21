@@ -1,0 +1,161 @@
+Issue Id,Parent Id,Issue Type,Summary,Epic Name,Description,Priority,Story Points,Labels,Labels ,Sprint
+1,,Epic,E1 - Mapa de zonas de riesgo,Mapa de zonas de riesgo,"Descripción: Visualización georreferenciada de las zonas, calles y horarios de mayor incidencia delictiva en San Juan de Lurigancho, con filtros por tipo de delito y franja horaria.
+
+Objetivo de negocio: Que vecinos y visitantes conozcan las zonas de riesgo y eviten exponerse, reduciendo la probabilidad de ser víctimas de robos y asaltos.",Highest,,epica,,
+2,,Epic,E2 - Reportes ciudadanos,Reportes ciudadanos,"Descripción: Canal único para que los vecinos reporten incidentes (robo, asalto en transporte, extorsión, microcomercialización), incluso de forma anónima, con ubicación exacta.
+
+Objetivo de negocio: Centralizar los reportes que hoy quedan dispersos en redes sociales para que lleguen al serenazgo y a la comisaría.",Highest,,epica,,
+3,,Epic,E3 - Gestión y atención de incidentes,Gestión y atención de incidentes,"Descripción: Bandeja para operadores de serenazgo que permite priorizar, atender, cambiar el estado y derivar reportes a la comisaría correspondiente.
+
+Objetivo de negocio: Reducir el tiempo de respuesta ante incidentes y dar trazabilidad a cada reporte.",Highest,,epica,,
+4,,Epic,E4 - Autenticación y seguridad,Autenticación y seguridad,"Descripción: Inicio de sesión, roles y controles de seguridad (JWT, bcrypt, limitación de intentos) que protegen el panel y los datos de los denunciantes.
+
+Objetivo de negocio: Garantizar que solo personal autorizado gestione incidentes y proteger la identidad de los vecinos frente a represalias.",Highest,,epica,,
+5,,Epic,E5 - Analítica y alertas,Analítica y alertas,"Descripción: Estadísticas por tipo de delito, estado y franja horaria, y alertas al ciudadano cuando se encuentra en una zona de alto riesgo.
+
+Objetivo de negocio: Apoyar la planificación del patrullaje con datos y prevenir delitos alertando a tiempo.",Highest,,epica,,
+100,4,Story,HU01 - Iniciar sesión con usuario y contraseña,,"Como operador de serenazgo, quiero iniciar sesión con usuario y contraseña, para acceder de forma segura al panel de gestión de incidentes.
+
+Criterios de aceptación:
+* Dado que tengo credenciales válidas, cuando inicio sesión, entonces accedo al panel y recibo un token con vigencia de 2 horas.
+* Dado que ingreso una contraseña incorrecta, cuando intento ingresar, entonces veo «Credenciales inválidas» sin indicar qué dato falló.
+
+MoSCoW: Must",Highest,5,Must,autenticación,Sprint 1
+101,4,Story,"HU02 - Asignar roles (operador, administrador) a los usuarios",,"Como administrador, quiero asignar roles (operador, administrador) a los usuarios, para controlar quién puede gestionar los reportes.
+
+Criterios de aceptación:
+* Dado que soy administrador, cuando asigno el rol operador a un usuario, entonces ese usuario puede ver la bandeja de reportes.
+* Dado que un usuario sin rol de staff llama a la bandeja, cuando envía la petición, entonces recibe 403 Permisos insuficientes.
+
+MoSCoW: Should
+
+Depende de: HU01",High,5,Should,autenticación,Sprint 3
+102,1,Story,HU03 - Ver un mapa del distrito con las zonas de riesgo coloreadas por nivel,,"Como vecino de SJL, quiero ver un mapa del distrito con las zonas de riesgo coloreadas por nivel, para evitar transitar por las zonas más peligrosas.
+
+Criterios de aceptación:
+* Dado que abro la aplicación, cuando carga el mapa, entonces veo las zonas en rojo (alto), naranja (medio) y amarillo (bajo).
+* Dado que veo el mapa, cuando reviso la leyenda, entonces entiendo qué significa cada color.
+
+MoSCoW: Must",Highest,8,Must,mapa,Sprint 1
+103,1,Story,HU04 - Filtrar las zonas por tipo de delito,,"Como vecino de SJL, quiero filtrar las zonas por tipo de delito, para conocer el riesgo específico que me preocupa (robo, extorsión, etc.).
+
+Criterios de aceptación:
+* Dado que estoy en el mapa, cuando selecciono «Extorsión», entonces solo se muestran las zonas con ese delito.
+* Dado que envío un tipo inexistente a la API, cuando se procesa, entonces recibo 400 Tipo inválido.
+
+MoSCoW: Should
+
+Depende de: HU03",High,3,Should,mapa,Sprint 2
+104,1,Story,HU05 - Filtrar las zonas por franja horaria,,"Como visitante del distrito, quiero filtrar las zonas por franja horaria, para planificar a qué hora es más seguro transitar.
+
+Criterios de aceptación:
+* Dado que estoy en el mapa, cuando elijo «Noche (18-24)», entonces veo solo las zonas críticas en ese horario.
+* Dado que quito el filtro, cuando selecciono «Todas», entonces vuelven a mostrarse todas las zonas.
+
+MoSCoW: Should
+
+Depende de: HU03",High,3,Should,mapa,Sprint 3
+105,1,Story,"HU06 - Ver el detalle de una zona (nivel, delitos frecuentes y horario crítico)",,"Como vecino de SJL, quiero ver el detalle de una zona (nivel, delitos frecuentes y horario crítico), para informarme antes de pasar por ella.
+
+Criterios de aceptación:
+* Dado que veo una zona en el mapa, cuando hago clic sobre ella, entonces se muestra su nombre, nivel, delitos y horario crítico.
+* Dado que consulto una zona inexistente, cuando llamo a la API, entonces recibo 404.
+
+MoSCoW: Could
+
+Depende de: HU03",Medium,2,Could,mapa,Sprint 3
+106,2,Story,"HU07 - Registrar un reporte de incidente con tipo, ubicación y descripción",,"Como vecino de SJL, quiero registrar un reporte de incidente con tipo, ubicación y descripción, para alertar al serenazgo y a la comisaría.
+
+Criterios de aceptación:
+* Dado que completo tipo, ubicación dentro de SJL y una descripción de 10 a 280 caracteres, cuando envío, entonces el reporte se registra con estado «Nuevo».
+* Dado que la ubicación está fuera de SJL, cuando envío, entonces veo un mensaje de error y no se registra.
+
+MoSCoW: Must",Highest,8,Must,reportes,Sprint 1
+107,2,Story,HU08 - Reportar de forma anónima,,"Como vecino víctima de extorsión, quiero reportar de forma anónima, para no exponerme a represalias.
+
+Criterios de aceptación:
+* Dado que dejo marcada la opción «Anónimo», cuando envío, entonces no se guarda ningún dato de contacto.
+* Dado que consulto la lista pública de reportes, cuando se muestra, entonces nunca aparece el celular del denunciante.
+
+MoSCoW: Must
+
+Depende de: HU07",Highest,3,Must,reportes,Sprint 2
+108,2,Story,HU09 - Marcar la ubicación del incidente con un clic en el mapa,,"Como vecino de SJL, quiero marcar la ubicación del incidente con un clic en el mapa, para precisar dónde ocurrió sin escribir coordenadas.
+
+Criterios de aceptación:
+* Dado que estoy en el mapa, cuando hago clic en un punto, entonces se coloca un marcador y se llenan la latitud y longitud del formulario.
+* Dado que uso «mi ubicación», cuando acepto el permiso del navegador, entonces se completan las coordenadas automáticamente.
+
+MoSCoW: Should
+
+Depende de: HU03, HU07",High,5,Should,reportes,Sprint 2
+109,2,Story,HU10 - Ver los reportes recientes de mi distrito,,"Como vecino de SJL, quiero ver los reportes recientes de mi distrito, para estar al tanto de lo que ocurre cerca.
+
+Criterios de aceptación:
+* Dado que abro el mapa, cuando cargan los reportes, entonces veo los últimos 50 ordenados del más reciente al más antiguo.
+* Dado que veo un reporte, cuando reviso su información, entonces veo tipo, estado, descripción y fecha.
+
+MoSCoW: Should
+
+Depende de: HU07",High,3,Should,reportes,Sprint 2
+110,3,Story,HU11 - Ver la bandeja de reportes filtrada por estado y tipo,,"Como operador de serenazgo, quiero ver la bandeja de reportes filtrada por estado y tipo, para priorizar la atención de incidentes.
+
+Criterios de aceptación:
+* Dado que inicié sesión como operador, cuando abro la bandeja, entonces veo todos los reportes con su contacto (si no es anónimo).
+* Dado que no tengo token, cuando intento ver la bandeja, entonces recibo 401.
+
+MoSCoW: Must
+
+Depende de: HU01, HU07",Highest,5,Must,gestión,Sprint 2
+111,3,Story,"HU12 - Cambiar el estado de un reporte (Nuevo, En atención, Atendido, Descartado)",,"Como operador de serenazgo, quiero cambiar el estado de un reporte (Nuevo, En atención, Atendido, Descartado), para dar seguimiento y trazabilidad a cada incidente.
+
+Criterios de aceptación:
+* Dado un reporte «Nuevo», cuando lo paso a «En atención», entonces se guarda el cambio con mi usuario y la fecha en el historial.
+* Dado un reporte «Nuevo», cuando intento pasarlo directo a «Atendido», entonces el sistema lo rechaza (422).
+
+MoSCoW: Must
+
+Depende de: HU11",Highest,5,Must,gestión,Sprint 3
+112,3,Story,HU13 - Derivar un reporte a la comisaría correspondiente,,"Como operador de serenazgo, quiero derivar un reporte a la comisaría correspondiente, para coordinar la respuesta con la PNP.
+
+Criterios de aceptación:
+* Dado un reporte, cuando selecciono la comisaría «Bayóvar», entonces queda derivado y registrado en el historial.
+* Dado que envío una comisaría que no existe, cuando se procesa, entonces recibo 400.
+
+MoSCoW: Could
+
+Depende de: HU12",Medium,5,Could,gestión,Sprint 4
+113,5,Story,"HU14 - Ver estadísticas de reportes por tipo de delito, estado y franja horaria",,"Como jefe de serenazgo, quiero ver estadísticas de reportes por tipo de delito, estado y franja horaria, para planificar el patrullaje según datos.
+
+Criterios de aceptación:
+* Dado que existen reportes, cuando abro Estadísticas, entonces veo el total y los conteos por tipo, estado y franja.
+* Dado que se registra un nuevo reporte, cuando actualizo, entonces las cifras se recalculan.
+
+MoSCoW: Should
+
+Depende de: HU07",High,5,Should,analítica,Sprint 3
+114,5,Story,HU15 - Recibir una alerta cuando me encuentro en una zona de alto riesgo,,"Como vecino de SJL, quiero recibir una alerta cuando me encuentro en una zona de alto riesgo, para tomar precauciones a tiempo.
+
+Criterios de aceptación:
+* Dado que comparto mi ubicación y estoy dentro del radio de una zona de alto riesgo, cuando consulto, entonces veo una alerta en rojo con el nombre de la zona.
+* Dado que estoy fuera de toda zona de alto riesgo, cuando consulto, entonces el sistema me indica que no estoy en zona de alto riesgo.
+
+MoSCoW: Could
+
+Depende de: HU03",Medium,8,Could,analítica,Sprint 4
+115,5,Story,HU16 - Exportar los reportes a CSV,,"Como jefe de serenazgo, quiero exportar los reportes a CSV, para compartirlos con la comisaría.
+
+Criterios de aceptación:
+* Dado que estoy en la bandeja, cuando presiono «Exportar», entonces se descarga un CSV con los reportes filtrados.
+* Dado que no tengo rol de staff, cuando intento exportar, entonces recibo 403.
+
+MoSCoW: Won't",Low,3,Wont,analítica,
+116,4,Story,HU17 - Que el sistema limite los intentos de login y aplique cabeceras de seguridad,,"Como responsable de seguridad de la municipalidad, quiero que el sistema limite los intentos de login y aplique cabeceras de seguridad, para prevenir ataques de fuerza bruta, XSS y spam de reportes falsos.
+
+Criterios de aceptación:
+* Dado que fallo 5 veces el login en un minuto, cuando lo intento de nuevo, entonces recibo «Demasiados intentos, espere un minuto».
+* Dado cualquier respuesta del servidor, cuando la inspecciono, entonces incluye Content-Security-Policy y no incluye X-Powered-By.
+
+MoSCoW: Should
+
+Depende de: HU01",High,5,Should,autenticación,Sprint 4

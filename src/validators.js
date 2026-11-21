@@ -12,9 +12,14 @@ const TRANSICIONES = new Map([
   ['descartado', []]
 ]);
 
-/** Elimina etiquetas HTML y espacios extremos (mitiga XSS almacenado). */
+/**
+ * Mitiga XSS almacenado eliminando todos los caracteres < y > (sin ellos no puede
+ * formarse ninguna etiqueta HTML). Se usa una clase de caracteres simple, sin
+ * cuantificadores, para evitar ReDoS (corrige las alertas de CodeQL
+ * js/incomplete-multi-character-sanitization y js/polynomial-redos).
+ */
 function sanitizarTexto(texto) {
-  return String(texto).replace(/<[^>]*>/g, '').replace(/[<>]/g, '').trim();
+  return String(texto).replace(/[<>]/g, '').trim();
 }
 
 function dentroDeSJL(lat, lng) {

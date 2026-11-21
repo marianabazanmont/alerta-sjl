@@ -72,7 +72,7 @@ jobs:
       - name: SCA - npm audit (falla si hay vulnerabilidades altas o críticas en producción)
         run: npm audit --omit=dev --audit-level=high
       - name: Escaneo de secretos (Gitleaks)
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

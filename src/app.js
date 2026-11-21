@@ -27,7 +27,9 @@ app.use(
         imgSrc: ["'self'", 'data:', 'https://tile.openstreetmap.org'],
         connectSrc: ["'self'"]
       }
-    }
+    },
+    // OpenStreetMap exige el Referer para servir mosaicos; se envía solo el origen
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
   })
 );
 app.use(express.json({ limit: '10kb' }));
